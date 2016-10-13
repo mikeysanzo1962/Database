@@ -5,60 +5,60 @@
 --different	kinds	of	products.	(There	are	two	cities	that	make	the	most	different	
 --products.	Return	the	name	and	city	of	customers	from	either	one	of	those.)	
 
-SELECT c.name, ci.city
+SELECT c.name, ci.city --name and city of customers
 FROM customers c, 
-	    (SELECT MAX(x.diffProd), x.city
-	     FROM (SELECT COUNT(city) AS diffProd, city
+	    (SELECT MAX(x.difprod), x.city --different products
+	     FROM (SELECT COUNT(city) AS difprod, city
 	           FROM products p
 		   GROUP BY city
-	           ORDER BY COUNT(city)DESC
+	           ORDER BY COUNT(city)DESC--descending
 		   ) AS x
 	     GROUP BY x.city
-	     ORDER BY max(x.diffProd) DESC
+	     ORDER BY max(x.difprod) DESC--descending
 	     LIMIT 2
 		   ) AS ci
-WHERE c.city = ci.city;
+WHERE c.city = ci.city;--city that makes most diverse products
 --2. Display	the	names	of	products	whose	priceUSD	is	strictly	below	the	average	priceUSD,	
---in	reverse-alphabetical	order.	
+--in	reverse-alphabetical(Ascending) order.	
 
-SELECT name
+SELECT name--product names
 FROM products p,
-	    (SELECT (AVG (priceUSD)) 
+	    (SELECT (AVG (priceUSD)) --average price
 		AS average
 	     FROM products
 	     ) 	AS price
 WHERE p.priceUSD > price.average
-ORDER BY name ASC;
+ORDER BY name ASC;--reverse alphabetical
 --3. Display	the	customer	name,	pid	ordered,	and	the	total	for	all	orders,	sorted	by	total	
 --from	low	to	high.	
 
-SELECT c.name, o.pid, o.totalUSD
+SELECT c.name, o.pid, o.totalUSD--customer name, pid, and usd
 FROM customers c
-INNER JOIN orders o ON 
+INNER JOIN orders o ON --from orders
 	(o.cid = c.cid)
 ORDER BY o.totalUSD ASC;
 --4. Display	all	customer	names	(in	alphabetical	order)	and	their	total	ordered,	and	
 --nothing	more.	Use	coalesce	to	avoid	showing	NULLs.	
 
-SELECT c.name, SUM (o.totalUSD)
+SELECT c.name, SUM (o.totalUSD)--add usd
 FROM customers c, orders o
 WHERE o.cid = c.cid
 GROUP BY c.name
-ORDER BY name ASC;
+ORDER BY name ASC;--alphabetical
 --5. Display	the	names	of	all	customers	who	bought	products	from	agents	based	in	New	
 --York	along	with	the	names	of	the	products	they	ordered,	and	the	names	of	the	agents	
 --who	sold	it	to	them.	
 
-SELECT c.name, p.name, a.name
+SELECT c.name, p.name, a.name--names of products, agents, customers
 FROM orders o
-INNER JOIN agents a ON 
+INNER JOIN agents a ON --agent
 	(a.aid = o.aid)
-INNER JOIN products p ON 
+INNER JOIN products p ON --products they orders
 	(p.pid = o.pid)
-INNER JOIN customers c ON 
+INNER JOIN customers c ON --customer
 	(c.cid = o.cid)
 WHERE o.aid IN (
-	        SELECT a.aid
+	        SELECT a.aid--agents who did busiesns in new york
 		FROM agents a
 		WHERE city = 'New York'
 		);
@@ -68,9 +68,9 @@ WHERE o.aid IN (
 --values	to	the	values	in	Orders.totalUSD.	Display	all	rows	in	Orders	where	
 --Orders.totalUSD	is	incorrect,	if	any.	
 
-SELECT o.ordnum, (o.qty * p.priceUSD) AS accurateUSD, o.totalUSD
+SELECT o.ordnum, (o.qty * p.priceUSD) AS accurateUSD, o.totalUSD--equation for right usd amount
 FROM orders o
-INNER JOIN products p ON 
+INNER JOIN products p ON --comparing it if it does not equal
 	(p.pid = o.pid)
 WHERE ((o.qty * p.priceUSD) <> o.totalUSD);
 --7. What’s	the	difference	between	a	LEFT	OUTER	JOIN	and	a	RIGHT	OUTER	JOIN?	Give	
