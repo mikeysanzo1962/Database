@@ -51,7 +51,7 @@ create table Location
 );
 
 -- Actor
-create table actors
+create table Actors
 (
     pid     char(3) not null references person(pid),
     hairColor   text,
@@ -67,7 +67,7 @@ create table actors
 
 
 -- Director
-create table directors
+create table Directors
 (
     pid     char(3) not null references person(pid),
     filmSchool  text,
@@ -79,7 +79,7 @@ create table directors
 );
 
 
-create table actorsInMovies
+create table ActorsInMovie
 (
     mid     char(3) not null references movies(mid),
     pid     char(3) references actor(pid),
@@ -88,7 +88,7 @@ create table actorsInMovies
 );
 
 
-create table directorsInMovies
+create table DirectorsInMovie
 (
     mid     char(3) not null references movies(mid),
     pid     char(3) references director(pid),
