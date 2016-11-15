@@ -149,7 +149,7 @@ create table partsInSystems
 -- Catalog of suppliers and their parts
 create table catalog
 (
-	vendorID	char(7) not null references suppliers(suppID),
+	vendorID	char(7) not null references suppliers(vendorID),
 	partID		char(7) not null references parts(partID),
 	primary key(vendorID, partID)
 );
